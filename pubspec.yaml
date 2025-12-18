@@ -1,5 +1,7 @@
 name: nehing_generator
-description: 의미 없는 랜덤 한글 문자열을 생성하는 녜힁 제조기
+description: >
+  A Dart package that generates meaningless but funny random Korean text
+  (known as 'Nehing') for dummy content, testing, games, and fun experiments.
 version: 0.0.1
 repository: https://github.com/highgw/nehing_generator
 homepage: https://github.com/highgw/nehing_generator
