@@ -7,6 +7,7 @@ library nehing_generator;
 
 import 'dart:math';
 
+/// Nehing generator class.
 class Nehing {
   static final _random = Random();
 
