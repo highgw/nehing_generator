@@ -1,6 +1,12 @@
 # nehing_generator
 
-의미 없는 랜덤 한글 문자열(녜힁)을 생성하는 Dart 패키지입니다.
+[![pub package](https://img.shields.io/pub/v/nehing_generator.svg)](https://pub.dev/packages/nehing_generator)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+🎲 **의미 없는 랜덤 한글 문자열, 일명 ‘녜힁’을 생성하는 Dart 패키지입니다.**
+
+닉네임, 더미 텍스트, 테스트 데이터,  
+혹은 그냥 웃고 싶을 때 쓰면 좋을 것 같아요.
 
 ## Example Output
 
