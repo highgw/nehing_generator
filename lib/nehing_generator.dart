@@ -11,15 +11,40 @@ class Nehing {
   static final _random = Random();
 
   static const _chosung = [
-    'ㄱ','ㄴ','ㄷ','ㄹ','ㅁ','ㅂ','ㅅ','ㅇ','ㅈ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'
+    'ㄱ',
+    'ㄴ',
+    'ㄷ',
+    'ㄹ',
+    'ㅁ',
+    'ㅂ',
+    'ㅅ',
+    'ㅇ',
+    'ㅈ',
+    'ㅊ',
+    'ㅋ',
+    'ㅌ',
+    'ㅍ',
+    'ㅎ'
   ];
 
-  static const _jungsung = [
-    'ㅏ','ㅑ','ㅓ','ㅕ','ㅗ','ㅛ','ㅜ','ㅠ','ㅡ','ㅣ'
-  ];
+  static const _jungsung = ['ㅏ', 'ㅑ', 'ㅓ', 'ㅕ', 'ㅗ', 'ㅛ', 'ㅜ', 'ㅠ', 'ㅡ', 'ㅣ'];
 
   static const _jongsung = [
-    '', 'ㄱ','ㄴ','ㄷ','ㄹ','ㅁ','ㅂ','ㅅ','ㅇ','ㅈ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'
+    '',
+    'ㄱ',
+    'ㄴ',
+    'ㄷ',
+    'ㄹ',
+    'ㅁ',
+    'ㅂ',
+    'ㅅ',
+    'ㅇ',
+    'ㅈ',
+    'ㅊ',
+    'ㅋ',
+    'ㅌ',
+    'ㅍ',
+    'ㅎ'
   ];
 
   /// Generates a random Korean text string.
@@ -41,7 +66,7 @@ class Nehing {
   }) {
     return List.generate(
       length,
-          (_) => _randomSyllable(finalConsonant),
+      (_) => _randomSyllable(finalConsonant),
     ).join();
   }
 
@@ -53,9 +78,8 @@ class Nehing {
   static String _randomSyllable(bool finalConsonant) {
     final cho = _chosung[_random.nextInt(_chosung.length)];
     final jung = _jungsung[_random.nextInt(_jungsung.length)];
-    final jong = finalConsonant
-        ? _jongsung[_random.nextInt(_jongsung.length)]
-        : '';
+    final jong =
+        finalConsonant ? _jongsung[_random.nextInt(_jongsung.length)] : '';
 
     final code = 0xAC00 +
         (_chosung.indexOf(cho) * 21 * 28) +
