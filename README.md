@@ -8,6 +8,12 @@
 닉네임, 더미 텍스트, 테스트 데이터,  
 혹은 그냥 웃고 싶을 때 쓰면 좋을 것 같아요.
 
+🎲 **A Dart package that generates meaningless but funny random Korean text,  
+commonly known as “Nehing”.**
+
+This package does **not** try to generate meaningful Korean words or sentences.  
+Instead, it creates random Hangul syllables that are perfect for:
+
 ## Example Output
 
 - 녜힁
