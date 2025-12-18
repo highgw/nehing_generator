@@ -2,6 +2,7 @@
 
 [![pub package](https://img.shields.io/pub/v/nehing_generator.svg)](https://pub.dev/packages/nehing_generator)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![CI](https://github.com/highgw/nehing_generator/actions/workflows/ci-release.yml/badge.svg)
 
 🎲 **의미 없는 랜덤 한글 문자열, 일명 ‘녜힁’을 생성하는 Dart 패키지입니다.**
 
