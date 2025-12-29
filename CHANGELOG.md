@@ -13,3 +13,7 @@
 ## 0.0.4
 
 - Add ci
+
+## 0.1.0
+
+- Add emotion onomatopoeia generation
