@@ -7,6 +7,24 @@ library nehing_generator;
 
 import 'dart:math';
 
+/// Emotion types for generating emotion-based sounds.
+enum EmotionType {
+  /// Happy/excited emotions (하하, 호호, 히히)
+  happy,
+
+  /// Sad/crying emotions (흑흑, 훌쩍, 엉엉)
+  sad,
+
+  /// Angry emotions (크악, 으악, 으르렁)
+  angry,
+
+  /// Surprised emotions (헉, 엥, 오잉)
+  surprised,
+
+  /// Laughing emotions (ㅋㅋ, ㅎㅎ, 키득)
+  laughing,
+}
+
 /// Nehing generator class.
 class Nehing {
   static final _random = Random();
@@ -48,6 +66,35 @@ class Nehing {
     'ㅎ'
   ];
 
+  /// emotion presets for generating emotion-based sounds
+  static const Map<EmotionType, Map<String, List<String>>> _emotionPresets = {
+    EmotionType.happy: {
+      'cho': ['ㅎ', 'ㅋ', 'ㅎ', 'ㅎ'], // ㅎ
+      'jung': ['ㅏ', 'ㅗ', 'ㅣ', 'ㅏ'],
+      'jong': ['', '', 'ㅎ', ''],
+    },
+    EmotionType.sad: {
+      'cho': ['ㅎ', 'ㅇ', 'ㅁ'],
+      'jung': ['ㅜ', 'ㅠ', 'ㅓ', 'ㅡ'],
+      'jong': ['ㄱ', 'ㄴ', 'ㅁ', 'ㄹ'],
+    },
+    EmotionType.angry: {
+      'cho': ['ㄱ', 'ㅋ', 'ㄱ', 'ㅋ'], // ㄱ, ㅋ
+      'jung': ['ㅏ', 'ㅓ', 'ㅡ', 'ㅜ'],
+      'jong': ['ㄱ', 'ㄹ', 'ㄱ', ''],
+    },
+    EmotionType.surprised: {
+      'cho': ['ㅎ', 'ㅇ', 'ㅇ', 'ㅇ'], // ㅇ
+      'jung': ['ㅓ', 'ㅗ', 'ㅏ', 'ㅓ'],
+      'jong': ['', 'ㄱ', 'ㅇ', ''],
+    },
+    EmotionType.laughing: {
+      'cho': ['ㅋ', 'ㅎ', 'ㄱ', 'ㅋ'], // ㅋ
+      'jung': ['ㅡ', 'ㅣ', 'ㅓ', 'ㅡ'],
+      'jong': ['', '', 'ㄱ', ''],
+    },
+  };
+
   /// Generates a random Korean text string.
   ///
   /// The returned string consists of randomly combined Hangul syllables.
@@ -71,6 +118,38 @@ class Nehing {
     ).join();
   }
 
+  /// Generates a random Korean text string based on emotion type.
+  ///
+  /// Example:
+  /// ```dart
+  /// Nehing.generateEmotion(EmotionType.happy);  // "하하" or "호호"
+  /// Nehing.generateEmotion(EmotionType.sad);    // "흑흑" or "엉엉"
+  /// ```
+  static String generateEmotion(
+    EmotionType emotion, {
+    int length = 2,
+  }) {
+    return _generateFromPreset(_emotionPresets[emotion]!, length);
+  }
+
+  /// Generates a syllable from a preset.
+  static String _generateFromPreset(
+    Map<String, List<String>> preset,
+    int length,
+  ) {
+    final result = <String>[];
+
+    for (int i = 0; i < length; i++) {
+      final cho = preset['cho']![_random.nextInt(preset['cho']!.length)];
+      final jung = preset['jung']![_random.nextInt(preset['jung']!.length)];
+      final jong = preset['jong']![_random.nextInt(preset['jong']!.length)];
+
+      result.add(_buildSyllable(cho, jung, jong));
+    }
+
+    return result.join();
+  }
+
   /// Generates a single random Hangul syllable.
   ///
   /// This method randomly selects initial, medial, and optional
@@ -82,6 +161,11 @@ class Nehing {
     final jong =
         finalConsonant ? _jongsung[_random.nextInt(_jongsung.length)] : '';
 
+    return _buildSyllable(cho, jung, jong);
+  }
+
+  /// Builds a Hangul syllable from components.
+  static String _buildSyllable(String cho, String jung, String jong) {
     final code = 0xAC00 +
         (_chosung.indexOf(cho) * 21 * 28) +
         (_jungsung.indexOf(jung) * 28) +
