@@ -17,3 +17,4 @@
 ## 0.1.0
 
 - Add emotion onomatopoeia generation
+- Update README with examples
