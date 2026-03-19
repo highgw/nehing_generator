@@ -25,6 +25,15 @@ enum EmotionType {
   laughing,
 }
 
+/// Modes for handling exceptions when generating text.
+enum ExceptMode {
+  /// 글자 단위로 처리
+  char,
+
+  /// 단어 단위로 처리(연속 문자열)
+  word,
+}
+
 /// Nehing generator class.
 class Nehing {
   static final _random = Random();
@@ -95,6 +104,11 @@ class Nehing {
     },
   };
 
+  /// 한글 범위 체크 (0xAC00 ~ 0xD7A3)
+  static bool _isHangul(String s) {
+    return s.runes.every((c) => c >= 0xAC00 && c <= 0xD7A3);
+  }
+
   /// Generates a random Korean text string.
   ///
   /// The returned string consists of randomly combined Hangul syllables.
@@ -102,20 +116,83 @@ class Nehing {
   /// - [length] specifies how many syllables will be generated.
   /// - If [finalConsonant] is set to false, generated syllables
   ///   will not include final consonants (받침).
+  /// - [exceptMode] determines how [exceptWord] is applied during generation.
+  ///   - [ExceptMode.word]: regenerates the entire result if it matches [exceptWord].
+  ///   - [ExceptMode.char]: regenerates any syllable found in [exceptWord].
+  /// - [exceptWord] specifies the Korean string to exclude. Must contain only
+  ///   Hangul syllables. Throws [ArgumentError] if non-Hangul characters are given.
+  /// - [maxAttempts] sets the maximum number of retries before throwing
+  ///   a [StateError]. Defaults to 100.
+  ///
+  /// Throws:
+  /// - [ArgumentError] if [exceptWord] contains non-Hangul characters.
+  /// - [StateError] if generation fails after [maxAttempts] attempts.
   ///
   /// Example:
   /// ```dart
   /// Nehing.generate(length: 4);
   /// Nehing.generate(length: 3, finalConsonant: false);
+  /// Nehing.generate(exceptMode: ExceptMode.word, exceptWord: '가나');
+  /// Nehing.generate(exceptMode: ExceptMode.char, exceptWord: '가나', maxAttempts: 50);
   /// ```
   static String generate({
     int length = 2,
     bool finalConsonant = true,
+    ExceptMode? exceptMode,
+    String? exceptWord,
+    int maxAttempts = 100,
   }) {
-    return List.generate(
-      length,
-      (_) => _randomSyllable(finalConsonant),
-    ).join();
+    // exceptWord 유효성 검사
+    if (exceptWord != null && exceptWord.isNotEmpty && !_isHangul(exceptWord)) {
+      throw ArgumentError(
+        'exceptWord는 한글만 허용됩니다. 입력값: "$exceptWord"',
+      );
+    }
+
+    if (exceptMode == null || exceptWord == null) {
+      return List.generate(
+        length,
+        (_) => _randomSyllable(finalConsonant),
+      ).join();
+    }
+
+    if (exceptMode == ExceptMode.word) {
+      int attempts = 0;
+      String result;
+      do {
+        if (attempts++ >= maxAttempts) {
+          throw StateError(
+            'generate()가 $maxAttempts회 시도 후에도 exceptWord("$exceptWord")와 '
+            '다른 단어를 생성하지 못했습니다.',
+          );
+        }
+        result = List.generate(
+          length,
+          (_) => _randomSyllable(finalConsonant),
+        ).join();
+      } while (result == exceptWord);
+      return result;
+    }
+
+    // ExceptMode.char
+    final exceptChars = exceptWord.split('').toSet();
+
+    // 생성 가능한 음절이 하나도 없는 경우 사전 검사
+    // (exceptChars가 전체 경우의 수를 덮으면 무한루프 방지)
+    return List.generate(length, (_) {
+      int attempts = 0;
+      String syllable;
+      do {
+        if (attempts++ >= maxAttempts) {
+          throw StateError(
+            '음절 생성이 $maxAttempts회 시도 후 실패했습니다. '
+            'exceptWord("$exceptWord")의 글자가 너무 많아 생성 가능한 음절이 부족할 수 있습니다.',
+          );
+        }
+        syllable = _randomSyllable(finalConsonant);
+      } while (exceptChars.contains(syllable));
+      return syllable;
+    }).join();
   }
 
   /// Generates a random Korean text string based on emotion type.

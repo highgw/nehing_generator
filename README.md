@@ -80,6 +80,53 @@ void main() {
 }
 ```
 
+### Except Mode (특정 글자/단어 제외)
+```dart
+import 'package:nehing_generator/nehing_generator.dart';
+
+void main() {
+  // 단어 단위 제외: 생성된 단어 전체가 '가나'와 같으면 재생성
+  print(Nehing.generate(
+    exceptMode: ExceptMode.word,
+    exceptWord: '가나',
+  ));
+
+  // 글자 단위 제외: '가', '나'가 포함된 음절은 재생성
+  print(Nehing.generate(
+    exceptMode: ExceptMode.char,
+    exceptWord: '가나',
+  ));
+
+  // 최대 재시도 횟수 지정 (기본값: 100)
+  print(Nehing.generate(
+    exceptMode: ExceptMode.char,
+    exceptWord: '가나',
+    maxAttempts: 50,
+  ));
+
+  // 비한글 입력 시 ArgumentError 발생
+  try {
+    Nehing.generate(
+      exceptMode: ExceptMode.word,
+      exceptWord: 'abc',
+    );
+  } on ArgumentError catch (e) {
+    print('ArgumentError 발생: $e');
+  }
+
+  // 재시도 횟수 초과 시 StateError 발생
+  try {
+    Nehing.generate(
+      exceptMode: ExceptMode.word,
+      exceptWord: '가나',
+      maxAttempts: 0,
+    );
+  } on StateError catch (e) {
+    print('StateError 발생: $e');
+  }
+}
+```
+
 ## API Reference
 
 ### `Nehing.generate()`
@@ -89,6 +136,9 @@ void main() {
 **Parameters:**
 - `length` (int, default: 2) - 생성할 음절 개수
 - `finalConsonant` (bool, default: true) - 받침 포함 여부
+- `exceptMode` (ExceptMode?, default: null) - 제외 모드
+- `exceptWord` (String?, default: null) - 제외할 한글 단어 (한글만 허용)
+- `maxAttempts` (int, default: 100) - 최대 재시도 횟수
 
 **Returns:** `String`
 
@@ -106,6 +156,11 @@ void main() {
 - `length` (int, default: 2) - 생성할 음절 개수
 
 **Returns:** `String`
+
+### `ExceptMode`
+
+- `ExceptMode.word` - 생성된 단어 전체가 `exceptWord`와 같으면 재생성 
+- `ExceptMode.char` | 생성된 음절이 `exceptWord`의 글자 중 하나라도 포함되면 재생성 |
 
 ## Links
 
