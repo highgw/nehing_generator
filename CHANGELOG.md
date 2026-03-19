@@ -18,3 +18,8 @@
 
 - Add emotion onomatopoeia generation
 - Update README with examples
+
+## 0.2.0
+
+- Add except word parameter
+- Add except mode (word/char)
